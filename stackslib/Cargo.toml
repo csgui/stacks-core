@@ -53,7 +53,7 @@ libstackerdb = { path = "../libstackerdb" }
 siphasher = "0.3.7"
 hashbrown = { workspace = true }
 toml = { workspace = true }
-clar2wasm = { git = "https://github.com/stacks-network/clarity-wasm.git", branch = "main"}
+clar2wasm = { git = "https://github.com/stacks-network/clarity-wasm.git", rev = "5257db1ffe048c6b8d560427f7cdd01c5753f3e1"}
 
 [target.'cfg(not(any(target_os = "macos",target_os="windows", target_arch = "arm" )))'.dependencies]
 tikv-jemallocator = {workspace = true}
