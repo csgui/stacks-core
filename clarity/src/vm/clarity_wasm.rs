@@ -8,6 +8,7 @@ use super::analysis::CheckErrors;
 use super::ast::{build_ast_with_rules, ASTRules};
 use super::callables::{DefineType, DefinedFunction};
 use super::costs::{constants as cost_constants, CostTracker};
+use super::costs_wasm::costs::CostLinker;
 use super::database::STXBalance;
 use super::errors::RuntimeErrorType;
 use super::events::*;
@@ -411,7 +412,8 @@ pub fn initialize_contract(
     link_host_functions(&mut linker)?;
 
     // Link cost-tracking globals.
-    super::costs_wasm::costs::CostLinker::define_cost_globals(&mut linker, &mut store)
+    linker
+        .define_cost_globals(&mut store)
         .map_err(|e| Error::Wasm(WasmError::UnableToLoadModule(e)))?;
 
     let instance = linker
