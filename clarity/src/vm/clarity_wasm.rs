@@ -411,8 +411,7 @@ pub fn initialize_contract(
     link_host_functions(&mut linker)?;
 
     // Link cost-tracking globals.
-    linker
-        .define_cost_globals(&mut store)
+    super::costs_wasm::costs::CostLinker::define_cost_globals(&mut linker, &mut store)
         .map_err(|e| Error::Wasm(WasmError::UnableToLoadModule(e)))?;
 
     let instance = linker

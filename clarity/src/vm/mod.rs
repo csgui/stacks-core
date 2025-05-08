@@ -27,6 +27,7 @@ pub mod contracts;
 
 #[cfg(feature = "clarity-wasm")]
 pub mod clarity_wasm;
+pub mod costs_wasm;
 
 pub mod ast;
 pub mod contexts;
