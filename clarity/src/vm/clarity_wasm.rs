@@ -524,6 +524,11 @@ pub fn call_function<'a>(
     // Link in the host interface functions.
     link_host_functions(&mut linker)?;
 
+    // Link cost-tracking globals.
+    linker
+        .define_cost_globals(&mut store)
+        .map_err(|e| Error::Wasm(WasmError::UnableToLoadModule(e)))?;
+
     let instance = linker
         .instantiate(&mut store, &module)
         .map_err(|e| Error::Wasm(WasmError::UnableToLoadModule(e)))?;
