@@ -8868,6 +8868,7 @@ mod error_mapping {
         read_bytes_from_wasm, read_from_wasm_indirect, read_identifier_from_wasm,
         signature_from_string,
     };
+    use crate::vm::costs::CostErrors;
     use crate::vm::errors::{CheckErrors, Error, RuntimeErrorType, ShortReturnType, WasmError};
     use crate::vm::types::{OptionalData, ResponseData};
     use crate::vm::{ClarityVersion, Value};
@@ -8942,6 +8943,21 @@ mod error_mapping {
         /// Indicates an attempt to use a function with too many arguments
         ArgumentCountAtMost = 15,
 
+        /// Indicates a runtime cost overrun
+        CostOverrunRuntime = 100,
+
+        /// Indicates a read count cost overrun
+        CostOverrunReadCount = 101,
+
+        /// Indicates a read length cost overrun
+        CostOverrunReadLength = 102,
+
+        /// Indicates a write count cost overrun
+        CostOverrunWriteCount = 103,
+
+        /// Indicates a write length cost overrun
+        CostOverrunWriteLength = 104,
+
         /// A catch-all for errors that are not mapped to specific error codes.
         /// This might be used for unexpected or unclassified errors.
         NotMapped = 99,
@@ -8967,6 +8983,11 @@ mod error_mapping {
                 13 => ErrorMap::ArgumentCountMismatch,
                 14 => ErrorMap::ArgumentCountAtLeast,
                 15 => ErrorMap::ArgumentCountAtMost,
+                100 => ErrorMap::CostOverrunRuntime,
+                101 => ErrorMap::CostOverrunReadCount,
+                102 => ErrorMap::CostOverrunReadLength,
+                103 => ErrorMap::CostOverrunWriteCount,
+                104 => ErrorMap::CostOverrunWriteLength,
                 _ => ErrorMap::NotMapped,
             }
         }
@@ -9147,6 +9168,11 @@ mod error_mapping {
                 let (expected, got) = get_runtime_error_arg_lengths(&instance, &mut store);
                 Error::Unchecked(CheckErrors::RequiresAtMostArguments(expected, got))
             }
+            ErrorMap::CostOverrunRuntime => Error::from(CostErrors::CostOverflow),
+            ErrorMap::CostOverrunReadCount => Error::from(CostErrors::CostOverflow),
+            ErrorMap::CostOverrunReadLength => Error::from(CostErrors::CostOverflow),
+            ErrorMap::CostOverrunWriteCount => Error::from(CostErrors::CostOverflow),
+            ErrorMap::CostOverrunWriteLength => Error::from(CostErrors::CostOverflow),
             _ => panic!("Runtime error code {} not supported", runtime_error_code),
         }
     }
