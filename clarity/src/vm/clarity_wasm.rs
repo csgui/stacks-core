@@ -440,11 +440,11 @@ pub fn initialize_contract(
         Err(e) => {
             // Before propagating the error, attempt to roll back the function context.
             // If the rollback fails, immediately return a rollback-specific error.
-            if store.data_mut().global_context.roll_back().is_err() {
-                return Err(Error::Wasm(WasmError::Expect(
-                    "Expected entry to rollback".into(),
-                )));
-            }
+            // if store.data_mut().global_context.roll_back().is_err() {
+            //     return Err(Error::Wasm(WasmError::Expect(
+            //         "Expected entry to rollback".into(),
+            //     )));
+            // }
 
             // Rollback succeeded, so resolve and return the original runtime error.
             return Err(error_mapping::resolve_error(
