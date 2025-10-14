@@ -17,14 +17,14 @@ use super::types::{
     ASCIIData, AssetIdentifier, BuffData, CallableData, CharType, FunctionType, ListData,
     ListTypeData, OptionalData, PrincipalData, QualifiedContractIdentifier, ResponseData,
     SequenceData, StacksAddressExtensions, StandardPrincipalData, TraitIdentifier, TupleData,
-    TupleTypeSignature, BUFF_1, BUFF_32, BUFF_33,
+    TupleTypeSignature,
 };
 use super::{CallStack, ClarityVersion, ContractName, Environment, SymbolicExpression};
 use crate::vm::analysis::ContractAnalysis;
 use crate::vm::contexts::GlobalContext;
 use crate::vm::errors::{Error, WasmError};
 use crate::vm::types::{
-    BufferLength, SequenceSubtype, SequencedValue, StringSubtype, TypeSignature,
+    BufferLength, SequenceSubtype, SequencedValue, StringSubtype, TypeSignature, TypeSignatureExt,
 };
 use crate::vm::{ClarityName, ContractContext, Value};
 
@@ -538,8 +538,8 @@ pub fn call_function<'a>(
     for (arg, expected_type) in args.iter().zip(expected_args.iter()) {
         if !expected_type.admits(&epoch, arg)? {
             return Err(Error::Unchecked(CheckErrors::TypeError(
-                expected_type.clone(),
-                TypeSignature::type_of(arg)?,
+                Box::new(expected_type.clone()),
+                Box::new(TypeSignature::type_of(arg)?),
             )));
         }
     }
@@ -4263,7 +4263,7 @@ fn link_nft_get_owner_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(), 
 
                 if !expected_asset_type.admits(&caller.data().global_context.epoch_id, &asset)? {
                     return Err(
-                        CheckErrors::TypeValueError(expected_asset_type.clone(), asset).into(),
+                        CheckErrors::TypeValueError(Box::new(expected_asset_type.clone()), Box::new(asset)).into(),
                     );
                 }
 
@@ -4375,7 +4375,7 @@ fn link_nft_burn_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(), Error
 
                 if !expected_asset_type.admits(&caller.data().global_context.epoch_id, &asset)? {
                     return Err(
-                        CheckErrors::TypeValueError(expected_asset_type.clone(), asset).into(),
+                        CheckErrors::TypeValueError(Box::new(expected_asset_type.clone()), Box::new(asset)).into(),
                     );
                 }
 
@@ -4513,7 +4513,7 @@ fn link_nft_mint_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(), Error
 
                 if !expected_asset_type.admits(&caller.data().global_context.epoch_id, &asset)? {
                     return Err(
-                        CheckErrors::TypeValueError(expected_asset_type.clone(), asset).into(),
+                        CheckErrors::TypeValueError(Box::new(expected_asset_type.clone()), Box::new(asset)).into(),
                     );
                 }
 
@@ -4654,7 +4654,7 @@ fn link_nft_transfer_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(), E
 
                 if !expected_asset_type.admits(&caller.data().global_context.epoch_id, &asset)? {
                     return Err(
-                        CheckErrors::TypeValueError(expected_asset_type.clone(), asset).into(),
+                        CheckErrors::TypeValueError(Box::new(expected_asset_type.clone()), Box::new(asset)).into(),
                     );
                 }
 
@@ -5763,7 +5763,7 @@ fn link_get_burn_block_info_header_hash_property_fn(
                         }
                         None => Value::none(),
                     },
-                    TypeSignature::OptionalType(Box::new(BUFF_32.clone())),
+                    TypeSignature::OptionalType(Box::new(TypeSignature::BUFFER_32.clone())),
                 );
 
                 write_to_wasm(
@@ -5832,8 +5832,8 @@ fn link_get_burn_block_info_pox_addrs_property_fn(
                     .database
                     .get_pox_payout_addrs_for_burnchain_height(height_value)?;
                 let addr_ty: TypeSignature = TupleTypeSignature::try_from(vec![
-                    ("hashbytes".into(), BUFF_32.clone()),
-                    ("version".into(), BUFF_1.clone()),
+                    ("hashbytes".into(), TypeSignature::BUFFER_32.clone()),
+                    ("version".into(), TypeSignature::BUFFER_1.clone()),
                 ])?
                 .into();
                 let addrs_ty = TypeSignature::list_of(addr_ty.clone(), 2)?;
@@ -6776,7 +6776,7 @@ fn link_enter_at_block_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(),
                 let block_hash = read_from_wasm(
                     memory,
                     &mut caller,
-                    &BUFF_32,
+                    &TypeSignature::BUFFER_32,
                     block_hash_offset,
                     block_hash_length,
                     epoch,
@@ -6789,7 +6789,7 @@ fn link_enter_at_block_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(),
                         }
                         StacksBlockId::from(data.as_slice())
                     }
-                    x => return Err(CheckErrors::TypeValueError(BUFF_32.clone(), x).into()),
+                    x => return Err(CheckErrors::TypeValueError(Box::new(TypeSignature::BUFFER_32.clone()), Box::new(x)).into()),
                 };
 
                 caller
@@ -6994,7 +6994,7 @@ fn link_secp256k1_recover_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<
                     .and_then(|export| export.into_memory())
                     .ok_or(Error::Wasm(WasmError::MemoryNotFound))?;
 
-                let ret_ty = TypeSignature::new_response(BUFF_33.clone(), TypeSignature::UIntType)?;
+                let ret_ty = TypeSignature::new_response(TypeSignature::BUFFER_33.clone(), TypeSignature::UIntType)?;
                 let repr_size = get_type_size(&ret_ty);
 
                 // Read the message bytes from the memory
@@ -7003,8 +7003,8 @@ fn link_secp256k1_recover_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<
                 // wrong length, throw a runtime type error.
                 if msg_bytes.len() != 32 {
                     return Err(CheckErrors::TypeValueError(
-                        BUFF_32.clone(),
-                        Value::buff_from(msg_bytes)?,
+                        Box::new(TypeSignature::BUFFER_32.clone()),
+                        Box::new(Value::buff_from(msg_bytes)?),
                     )
                     .into());
                 }
@@ -7083,8 +7083,8 @@ fn link_secp256k1_verify_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(
                 // wrong length, throw a runtime type error.
                 if msg_bytes.len() != 32 {
                     return Err(CheckErrors::TypeValueError(
-                        BUFF_32.clone(),
-                        Value::buff_from(msg_bytes)?,
+                        Box::new(TypeSignature::BUFFER_32.clone()),
+                        Box::new(Value::buff_from(msg_bytes)?),
                     )
                     .into());
                 }
@@ -7106,8 +7106,8 @@ fn link_secp256k1_verify_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(
                 // wrong length, throw a runtime type error.
                 if pk_bytes.len() != 33 {
                     return Err(CheckErrors::TypeValueError(
-                        BUFF_33.clone(),
-                        Value::buff_from(pk_bytes)?,
+                        Box::new(TypeSignature::BUFFER_33.clone()),
+                        Box::new(Value::buff_from(pk_bytes)?),
                     )
                     .into());
                 }
@@ -7149,7 +7149,7 @@ fn link_principal_of_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(), E
                 let key_val = read_from_wasm(
                     memory,
                     &mut caller,
-                    &BUFF_33.clone(),
+                    &TypeSignature::BUFFER_33.clone(),
                     key_offset,
                     key_length,
                     epoch,
@@ -7159,12 +7159,12 @@ fn link_principal_of_fn(linker: &mut Linker<ClarityWasmContext>) -> Result<(), E
                     Value::Sequence(SequenceData::Buffer(BuffData { ref data })) => {
                         if data.len() != 33 {
                             return Err(
-                                CheckErrors::TypeValueError(BUFF_33.clone(), key_val).into()
+                                CheckErrors::TypeValueError(Box::new(TypeSignature::BUFFER_33.clone()), Box::new(key_val)).into()
                             );
                         }
                         data
                     }
-                    _ => return Err(CheckErrors::TypeValueError(BUFF_33.clone(), key_val).into()),
+                    _ => return Err(CheckErrors::TypeValueError(Box::new(TypeSignature::BUFFER_33.clone()), Box::new(key_val)).into()),
                 };
 
                 if let Ok(pub_key) = Secp256k1PublicKey::from_slice(&pub_key) {
@@ -9129,7 +9129,7 @@ mod error_mapping {
             ErrorMap::ShortReturnAssertionFailure => {
                 let clarity_val =
                     short_return_value(&instance, &mut store, epoch_id, clarity_version);
-                Error::ShortReturn(ShortReturnType::AssertionFailed(clarity_val))
+                Error::ShortReturn(ShortReturnType::AssertionFailed(Box::new(clarity_val)))
             }
             ErrorMap::ArithmeticPowError => Error::Runtime(
                 RuntimeErrorType::Arithmetic(POW_ERROR_MESSAGE.into()),
@@ -9157,20 +9157,20 @@ mod error_mapping {
             ErrorMap::ShortReturnExpectedValueResponse => {
                 let clarity_val =
                     short_return_value(&instance, &mut store, epoch_id, clarity_version);
-                Error::ShortReturn(ShortReturnType::ExpectedValue(Value::Response(
-                    ResponseData {
-                        committed: false,
-                        data: Box::new(clarity_val),
-                    },
-                )))
+                Error::ShortReturn(ShortReturnType::ExpectedValue(Box::new(Value::Response(
+                                    ResponseData {
+                                        committed: false,
+                                        data: Box::new(clarity_val),
+                                    },
+                                ))))
             }
             ErrorMap::ShortReturnExpectedValueOptional => Error::ShortReturn(
-                ShortReturnType::ExpectedValue(Value::Optional(OptionalData { data: None })),
+                ShortReturnType::ExpectedValue(Box::new(Value::Optional(OptionalData { data: None }))),
             ),
             ErrorMap::ShortReturnExpectedValue => {
                 let clarity_val =
                     short_return_value(&instance, &mut store, epoch_id, clarity_version);
-                Error::ShortReturn(ShortReturnType::ExpectedValue(clarity_val))
+                Error::ShortReturn(ShortReturnType::ExpectedValue(Box::new(clarity_val)))
             }
             ErrorMap::ArgumentCountMismatch => {
                 let (expected, got) = get_runtime_error_arg_lengths(&instance, &mut store);

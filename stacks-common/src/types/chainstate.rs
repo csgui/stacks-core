@@ -115,18 +115,6 @@ impl_byte_array_newtype!(BlockHeaderHash, u8, 32);
 impl_byte_array_serde!(BlockHeaderHash);
 pub const BLOCK_HEADER_HASH_ENCODED_SIZE: usize = 32;
 
-#[cfg(feature = "log")]
-impl slog::Value for BlockHeaderHash {
-    fn serialize(
-        &self,
-        _record: &slog::Record,
-        key: slog::Key,
-        serializer: &mut dyn slog::Serializer,
-    ) -> slog::Result {
-        serializer.emit_arguments(key, &format_args!("{self}"))
-    }
-}
-
 /// Identifier used to identify "sortitions" in the
 ///  SortitionDB. A sortition is the collection of
 ///  valid burnchain operations (and any dependent

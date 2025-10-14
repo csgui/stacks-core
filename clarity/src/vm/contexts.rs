@@ -1507,7 +1507,7 @@ impl<'a, 'b> Environment<'a, 'b> {
             clarity_version,
             true,
         )
-        .map_err(|(check_error, _)| check_error.err)?;
+        .map_err(|boxed| boxed.0.into())?;
 
         self.initialize_contract_from_ast(
             contract_identifier,
