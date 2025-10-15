@@ -193,7 +193,6 @@ fn test_native_stx_ops(epoch: StacksEpochId, mut env_factory: TopLevelMemoryEnvi
             token_contract_id.clone(),
             contract,
             None,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -202,7 +201,6 @@ fn test_native_stx_ops(epoch: StacksEpochId, mut env_factory: TopLevelMemoryEnvi
             second_contract_id.clone(),
             contract_second,
             None,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -947,7 +945,6 @@ fn test_overlapping_nfts(
             tokens_contract_id,
             tokens_contract,
             None,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -956,7 +953,6 @@ fn test_overlapping_nfts(
             names_contract_id,
             names_contract,
             None,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -965,7 +961,6 @@ fn test_overlapping_nfts(
             names_2_contract_id,
             names_contract,
             None,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -1028,7 +1023,6 @@ fn test_simple_naming_system(
             tokens_contract_id,
             tokens_contract,
             None,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -1039,7 +1033,6 @@ fn test_simple_naming_system(
             names_contract_id.clone(),
             names_contract,
             None,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();

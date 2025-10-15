@@ -106,7 +106,6 @@ fn setup_tracked_cost_test(
                     &trait_contract_id,
                     version,
                     contract_trait,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             conn.initialize_smart_contract(
@@ -141,7 +140,6 @@ fn setup_tracked_cost_test(
                     &other_contract_id,
                     version,
                     contract_other,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             conn.initialize_smart_contract(
@@ -215,7 +213,6 @@ fn test_tracked_costs(
                     &self_contract_id,
                     version,
                     &contract_self,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             conn.initialize_smart_contract(

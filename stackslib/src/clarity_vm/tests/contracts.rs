@@ -93,7 +93,6 @@ fn test_get_burn_block_info_eval() {
                     &contract_identifier,
                     clarity_version,
                     contract,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -210,7 +209,7 @@ fn test_get_block_info_eval_v210() {
         conn.as_transaction(|clarity_db| {
             let clarity_version = ClarityVersion::default_for_epoch(epoch);
             let (mut ast, analysis) = clarity_db
-                .analyze_smart_contract(&contract_identifier, clarity_version, contract, ASTRules::PrecheckSize)
+                .analyze_smart_contract(&contract_identifier, clarity_version, contract)
                 .unwrap();
             clarity_db
                 .initialize_smart_contract(&contract_identifier, clarity_version, &mut ast, &analysis, contract, None, |_, _| None, None)
@@ -291,7 +290,7 @@ fn publish_contract(
 ) -> Result<(), clarity::vm::clarity::Error> {
     bc.as_transaction(|tx| {
         let (mut ast, analysis) =
-            tx.analyze_smart_contract(contract_id, version, contract, ASTRules::PrecheckSize)?;
+            tx.analyze_smart_contract(contract_id, version, contract)?;
         tx.initialize_smart_contract(
             contract_id,
             version,
@@ -582,7 +581,6 @@ fn trait_with_trait_invocation_cross_epoch() {
                     &math_contract_id,
                     clarity_version,
                     math_trait,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -608,7 +606,6 @@ fn trait_with_trait_invocation_cross_epoch() {
                     &compute_contract_id,
                     clarity_version,
                     compute_trait,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -634,7 +631,6 @@ fn trait_with_trait_invocation_cross_epoch() {
                     &impl_compute_id,
                     clarity_version,
                     impl_compute,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -660,7 +656,6 @@ fn trait_with_trait_invocation_cross_epoch() {
                     &impl_math_id,
                     clarity_version,
                     impl_math,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -686,7 +681,6 @@ fn trait_with_trait_invocation_cross_epoch() {
                     &use_compute_20_id,
                     clarity_version,
                     use_compute,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -719,7 +713,6 @@ fn trait_with_trait_invocation_cross_epoch() {
                     &use_compute_21_c1_id,
                     clarity_version,
                     use_compute,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -745,7 +738,6 @@ fn trait_with_trait_invocation_cross_epoch() {
                     &use_compute_21_c2_id,
                     clarity_version,
                     use_compute,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity_db
@@ -1273,7 +1265,6 @@ fn test_block_heights_across_versions() {
                     &contract_id_e3c3,
                     ClarityVersion::Clarity3,
                     &contract_e3c3,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
 
@@ -1403,7 +1394,6 @@ fn test_block_heights_across_versions_traits_3_from_2() {
                     &contract_id_e3c3,
                     ClarityVersion::Clarity3,
                     &contract_e3c3,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
 
@@ -1552,7 +1542,6 @@ fn test_block_heights_across_versions_traits_2_from_3() {
                     &contract_id_e3c3,
                     ClarityVersion::Clarity3,
                     &contract_e3c3,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
 
@@ -1693,7 +1682,6 @@ fn test_get_block_info_time() {
                     &contract_identifier2,
                     ClarityVersion::Clarity2,
                     contract2,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
 
@@ -1717,7 +1705,6 @@ fn test_get_block_info_time() {
                     &contract_identifier3,
                     ClarityVersion::Clarity3,
                     contract3,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
 

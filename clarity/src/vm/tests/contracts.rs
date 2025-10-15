@@ -27,7 +27,7 @@ use crate::vm::types::{PrincipalData, QualifiedContractIdentifier, StandardPrinc
 #[cfg(test)]
 #[allow(unused_imports)]
 use crate::vm::{
-    ast::{errors::ParseErrors, ASTRules},
+    ast::{errors::ParseErrors},
     database::MemoryBackingStore,
     errors::{CheckErrors, Error, RuntimeErrorType},
     tests::{
@@ -234,14 +234,12 @@ fn test_contract_caller(epoch: StacksEpochId, mut env_factory: MemoryEnvironment
         env.initialize_contract_with_db(
             QualifiedContractIdentifier::local("contract-a").unwrap(),
             contract_a,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
         env.initialize_contract_with_db(
             QualifiedContractIdentifier::local("contract-b").unwrap(),
             contract_b,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -396,14 +394,12 @@ fn test_tx_sponsor(epoch: StacksEpochId, mut env_factory: MemoryEnvironmentGener
         env.initialize_contract_with_db(
             QualifiedContractIdentifier::local("contract-a").unwrap(),
             contract_a,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
         env.initialize_contract_with_db(
             QualifiedContractIdentifier::local("contract-b").unwrap(),
             contract_b,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -461,14 +457,12 @@ fn test_fully_qualified_contract_call(
         env.initialize_contract_with_db(
             QualifiedContractIdentifier::local("contract-a").unwrap(),
             contract_a,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
         env.initialize_contract_with_db(
             QualifiedContractIdentifier::local("contract-b").unwrap(),
             contract_b,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -784,7 +778,6 @@ fn test_simple_contract_call(epoch: StacksEpochId, mut env_factory: MemoryEnviro
     env.initialize_contract_with_db(
         contract_identifier,
         contract_1,
-        ASTRules::PrecheckSize,
         &mut analysis_db,
     )
     .unwrap();
@@ -793,7 +786,6 @@ fn test_simple_contract_call(epoch: StacksEpochId, mut env_factory: MemoryEnviro
     env.initialize_contract_with_db(
         contract_identifier,
         contract_2,
-        ASTRules::PrecheckSize,
         &mut analysis_db,
     )
     .unwrap();
@@ -1192,7 +1184,6 @@ fn test_cc_stack_depth(
     env.initialize_contract_with_db(
         contract_identifier,
         contract_one,
-        ASTRules::PrecheckSize,
         &mut analysis_db,
     )
     .unwrap();
@@ -1202,7 +1193,6 @@ fn test_cc_stack_depth(
         env.initialize_contract_with_db(
             contract_identifier,
             contract_two,
-            ASTRules::PrecheckSize,
             &mut analysis_db
         )
         .unwrap_err(),
@@ -1252,7 +1242,6 @@ fn test_cc_trait_stack_depth(
     env.initialize_contract_with_db(
         contract_identifier,
         contract_one,
-        ASTRules::PrecheckSize,
         &mut analysis_db,
     )
     .unwrap();
@@ -1262,7 +1251,6 @@ fn test_cc_trait_stack_depth(
         env.initialize_contract_with_db(
             contract_identifier,
             contract_two,
-            ASTRules::PrecheckSize,
             &mut analysis_db
         )
         .unwrap_err(),

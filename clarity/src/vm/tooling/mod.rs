@@ -3,7 +3,6 @@ use stacks_common::types::StacksEpochId;
 use super::analysis::ContractAnalysis;
 use super::types::TypeSignature;
 use super::ClarityVersion;
-use crate::vm::ast::{build_ast_with_rules, ASTRules};
 use crate::vm::analysis::{run_analysis, CheckError};
 use crate::vm::ast::build_ast;
 use crate::vm::costs::LimitedCostTracker;

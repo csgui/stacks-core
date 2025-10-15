@@ -5245,7 +5245,6 @@ impl NakamotoChainState {
                     &contract_id,
                     ClarityVersion::Clarity2,
                     &contract_content,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             clarity

@@ -5,7 +5,6 @@ use stacks_common::util::secp256k1::{secp256k1_recover, secp256k1_verify, Secp25
 use wasmtime::{AsContextMut, Caller, Linker, Memory, Module, Store, Val, ValType};
 
 use super::analysis::CheckErrors;
-use super::ast::{build_ast_with_rules, ASTRules};
 use super::callables::{DefineType, DefinedFunction};
 use super::costs::{constants as cost_constants, CostTracker};
 use super::database::STXBalance;
@@ -21,6 +20,7 @@ use super::types::{
 };
 use super::{CallStack, ClarityVersion, ContractName, Environment, SymbolicExpression};
 use crate::vm::analysis::ContractAnalysis;
+use crate::vm::ast::build_ast;
 use crate::vm::contexts::GlobalContext;
 use crate::vm::errors::{Error, WasmError};
 use crate::vm::types::{
@@ -1818,13 +1818,12 @@ pub fn signature_from_string(
     version: ClarityVersion,
     epoch: StacksEpochId,
 ) -> Result<TypeSignature, Error> {
-    let expr = build_ast_with_rules(
+    let expr = build_ast(
         &QualifiedContractIdentifier::transient(),
         val,
         &mut (),
         version,
         epoch,
-        ASTRules::Typical,
     )?
     .expressions;
     let expr = expr.first().ok_or(CheckErrors::InvalidTypeDescription)?;

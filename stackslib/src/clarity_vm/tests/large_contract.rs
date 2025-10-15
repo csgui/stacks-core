@@ -231,7 +231,6 @@ fn test_simple_token_system(#[case] version: ClarityVersion, #[case] epoch: Stac
                     &contract_identifier,
                     ClarityVersion::Clarity2,
                     tokens_contract,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             tx.initialize_smart_contract(
@@ -564,7 +563,6 @@ fn inner_test_simple_naming_system(owned_env: &mut OwnedEnvironment, version: Cl
         env.initialize_contract_with_db(
             contract_identifier,
             tokens_contract,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -573,7 +571,6 @@ fn inner_test_simple_naming_system(owned_env: &mut OwnedEnvironment, version: Cl
         env.initialize_contract_with_db(
             contract_identifier,
             names_contract,
-            ASTRules::PrecheckSize,
             &mut analysis_db,
         )
         .unwrap();
@@ -781,7 +778,6 @@ pub fn rollback_log_memory_test(
                     &contract_identifier,
                     clarity_version,
                     &contract,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             assert!(format!(
@@ -859,7 +855,6 @@ pub fn let_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_id
                     &contract_identifier,
                     clarity_version,
                     &contract,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             assert!(format!(
@@ -940,7 +935,6 @@ pub fn argument_memory_test(
                     &contract_identifier,
                     clarity_version,
                     &contract,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             assert!(format!(
@@ -1037,7 +1031,6 @@ pub fn fcall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
                     &contract_identifier,
                     clarity_version,
                     &contract_ok,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             assert!(match conn
@@ -1065,7 +1058,6 @@ pub fn fcall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
                     &contract_identifier,
                     clarity_version,
                     &contract_err,
-                    ASTRules::PrecheckSize,
                 )
                 .unwrap();
             assert!(format!(
@@ -1155,7 +1147,6 @@ pub fn ccall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
                             &contract_identifier,
                             clarity_version,
                             &contract,
-                            ASTRules::PrecheckSize,
                         )
                         .unwrap();
                     conn.initialize_smart_contract(
@@ -1179,7 +1170,6 @@ pub fn ccall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
                             &contract_identifier,
                             clarity_version,
                             &contract,
-                            ASTRules::PrecheckSize,
                         )
                         .unwrap();
                     assert!(format!(
