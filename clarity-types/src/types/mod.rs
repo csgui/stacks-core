@@ -1083,7 +1083,7 @@ impl Value {
         ))))
     }
 
-     pub fn string_utf8_from_unicode_scalars(scalars: Vec<u8>) -> Result<Value> {
+    pub fn string_utf8_from_unicode_scalars(scalars: Vec<u8>) -> Result<Value> {
         let chars_result: Result<Vec<char>> = scalars
             .chunks(4)
             .map(|chunk| {

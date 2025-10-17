@@ -1444,11 +1444,7 @@ impl<'a, 'b> Environment<'a, 'b> {
         let mut analysis_db = store.as_analysis_db();
         analysis_db.begin();
 
-        self.initialize_contract_with_db(
-            contract_identifier,
-            contract_content,
-            &mut analysis_db,
-        )
+        self.initialize_contract_with_db(contract_identifier, contract_content, &mut analysis_db)
     }
 
     /// Initializes a Clarity smart contract with a custom analysis database.
@@ -1498,7 +1494,8 @@ impl<'a, 'b> Environment<'a, 'b> {
             clarity_version,
             true,
         )
-        .map_err(|(check_error, _)| check_error.err)?;
+        // .map_err(|(check_error, _)| check_error.err)?;
+        .expect("Failed to run analysis step");
 
         self.initialize_contract_from_ast(
             contract_identifier,

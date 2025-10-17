@@ -560,20 +560,12 @@ fn inner_test_simple_naming_system(owned_env: &mut OwnedEnvironment, version: Cl
         let mut env = owned_env.get_exec_environment(None, None, &placeholder_context);
 
         let contract_identifier = QualifiedContractIdentifier::local("tokens").unwrap();
-        env.initialize_contract_with_db(
-            contract_identifier,
-            tokens_contract,
-            &mut analysis_db,
-        )
-        .unwrap();
+        env.initialize_contract_with_db(contract_identifier, tokens_contract, &mut analysis_db)
+            .unwrap();
 
         let contract_identifier = QualifiedContractIdentifier::local("names").unwrap();
-        env.initialize_contract_with_db(
-            contract_identifier,
-            names_contract,
-            &mut analysis_db,
-        )
-        .unwrap();
+        env.initialize_contract_with_db(contract_identifier, names_contract, &mut analysis_db)
+            .unwrap();
     }
 
     {
@@ -774,11 +766,7 @@ pub fn rollback_log_memory_test(
 
         conn.as_transaction(|conn| {
             let (mut ct_ast, ct_analysis) = conn
-                .analyze_smart_contract(
-                    &contract_identifier,
-                    clarity_version,
-                    &contract,
-                )
+                .analyze_smart_contract(&contract_identifier, clarity_version, &contract)
                 .unwrap();
             assert!(format!(
                 "{:?}",
@@ -851,11 +839,7 @@ pub fn let_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_id
 
         conn.as_transaction(|conn| {
             let (mut ct_ast, ct_analysis) = conn
-                .analyze_smart_contract(
-                    &contract_identifier,
-                    clarity_version,
-                    &contract,
-                )
+                .analyze_smart_contract(&contract_identifier, clarity_version, &contract)
                 .unwrap();
             assert!(format!(
                 "{:?}",
@@ -931,11 +915,7 @@ pub fn argument_memory_test(
 
         conn.as_transaction(|conn| {
             let (mut ct_ast, ct_analysis) = conn
-                .analyze_smart_contract(
-                    &contract_identifier,
-                    clarity_version,
-                    &contract,
-                )
+                .analyze_smart_contract(&contract_identifier, clarity_version, &contract)
                 .unwrap();
             assert!(format!(
                 "{:?}",
@@ -1027,11 +1007,7 @@ pub fn fcall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
 
         conn.as_transaction(|conn| {
             let (mut ct_ast, ct_analysis) = conn
-                .analyze_smart_contract(
-                    &contract_identifier,
-                    clarity_version,
-                    &contract_ok,
-                )
+                .analyze_smart_contract(&contract_identifier, clarity_version, &contract_ok)
                 .unwrap();
             assert!(match conn
                 .initialize_smart_contract(
@@ -1054,11 +1030,7 @@ pub fn fcall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
 
         conn.as_transaction(|conn| {
             let (mut ct_ast, ct_analysis) = conn
-                .analyze_smart_contract(
-                    &contract_identifier,
-                    clarity_version,
-                    &contract_err,
-                )
+                .analyze_smart_contract(&contract_identifier, clarity_version, &contract_err)
                 .unwrap();
             assert!(format!(
                 "{:?}",
@@ -1143,11 +1115,7 @@ pub fn ccall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
             if i < (CONTRACTS - 1) {
                 conn.as_transaction(|conn| {
                     let (mut ct_ast, ct_analysis) = conn
-                        .analyze_smart_contract(
-                            &contract_identifier,
-                            clarity_version,
-                            &contract,
-                        )
+                        .analyze_smart_contract(&contract_identifier, clarity_version, &contract)
                         .unwrap();
                     conn.initialize_smart_contract(
                         &contract_identifier,
@@ -1166,11 +1134,7 @@ pub fn ccall_memory_test(#[case] clarity_version: ClarityVersion, #[case] epoch_
             } else {
                 conn.as_transaction(|conn| {
                     let (mut ct_ast, ct_analysis) = conn
-                        .analyze_smart_contract(
-                            &contract_identifier,
-                            clarity_version,
-                            &contract,
-                        )
+                        .analyze_smart_contract(&contract_identifier, clarity_version, &contract)
                         .unwrap();
                     assert!(format!(
                         "{:?}",

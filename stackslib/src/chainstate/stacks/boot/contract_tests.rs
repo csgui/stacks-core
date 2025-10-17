@@ -1764,8 +1764,7 @@ fn test_deploy_smart_contract(
     version: ClarityVersion,
 ) -> std::result::Result<(), ClarityError> {
     block.as_transaction(|tx| {
-        let (mut ast, analysis) =
-            tx.analyze_smart_contract(contract_id, version, content)?;
+        let (mut ast, analysis) = tx.analyze_smart_contract(contract_id, version, content)?;
         tx.initialize_smart_contract(
             contract_id,
             version,
